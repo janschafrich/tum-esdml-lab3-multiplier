@@ -20,7 +20,7 @@
 
 
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_BIT.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,17 +32,17 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity adder is
-    generic(N : integer := 16);
+    generic(N : integer := 8);
     Port (
-        a, b    : in std_logic_vector (N-1 downto 0);
-        z       : out std_logic_vector (N-1 downto 0);
-        co      : out std_logic
+        a, b    : in bit_vector (N-1 downto 0);
+        y       : out bit_vector (N-1 downto 0);
+        co      : out bit
      );
 end adder;
 
 architecture dataflow of adder is
 -- ripple carry adder
-    signal a_and_b, a_xor_b, abc, c: std_logic_vector(N-1 downto 0);
+    signal a_and_b, a_xor_b, abc, c: bit_vector(N-1 downto 0);
 
 begin
     g1: for i in 0 to N-1 generate
@@ -50,14 +50,14 @@ begin
         a_xor_b(i) <= a(i) XOR b(i);
         
         g2: if i = 0 generate -- half adder
-        z(i)    <= a_xor_b(i);
+        y(i)    <= a_xor_b(i);
         c(i)    <= a_and_b(i);
         end generate g2;
         
         g3: if i /= 0 generate -- full adder
         abc(i)<= a_xor_b(i) AND c(i-1);
         c(i)  <= a_and_b(i) OR abc(i);
-        z(i)  <= a_xor_b(i) XOR c(i-1);
+        y(i)  <= a_xor_b(i) XOR c(i-1);
         end generate g3;
     end generate g1;
     co <= c(N-1);

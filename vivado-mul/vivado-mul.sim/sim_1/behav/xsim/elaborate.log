@@ -5,4 +5,17 @@ Running: /home/jscha/software/xilinx/Vivado/2024.1/bin/unwrapped/lnx64.o/xelab -
 Using 8 slave threads.
 Starting static elaboration
 Completed static elaboration
-INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.numeric_bit
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package unisim.vcomponents
+Compiling architecture dataflow of entity xil_defaultlib.adder [adder_default]
+Compiling architecture dataflow of entity xil_defaultlib.multiplier [multiplier_default_uniq_0]
+Compiling architecture behavioral of entity xil_defaultlib.multiplier [multiplier_default_uniq_1]
+Compiling architecture behavioral of entity xil_defaultlib.tb_multiplier
+Built simulation snapshot tb_multiplier_behav

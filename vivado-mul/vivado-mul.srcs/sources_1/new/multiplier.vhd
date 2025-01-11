@@ -1,6 +1,6 @@
 -- ----------------------------------------------------------------------------------
 -- -- Company: 
--- -- Engineer: 
+-- -- Engineer: Jan-Eric Schäfrich
 -- -- 
 -- -- Create Date: 01/05/2025 09:51:19 AM
 -- -- Design Name: 
@@ -19,88 +19,15 @@
 -- ----------------------------------------------------------------------------------
 
 
--- library IEEE;
--- use IEEE.STD_LOGIC_1164.ALL;
--- use IEEE.numeric_std.all;
-
--- -- Uncomment the following library declaration if using
--- -- arithmetic functions with Signed or Unsigned values
--- --use IEEE.NUMERIC_STD.ALL;
-
--- -- Uncomment the following library declaration if instantiating
--- -- any Xilinx leaf cells in this code.
--- --library UNISIM;
--- --use UNISIM.VComponents.all;
-
--- entity multiplier is
---     generic (N : natural := 8);
---     port (
---         a,b : in bit_vector (N-1 downto 0);             -- can either be 0 or 1, no X, U, Z, L, H
---         s,v : in bit;
---         z : out bit_vector (2*N-1 downto 0);
---     );
--- end multiplier;
-
-
--- architecture dataflow of multiplier is
-
---     component adder is
---     generic (adder_width : integer);
---     Port(
---         a, b    : in bit_vector(adder_width-1 downto 0);
---         z       : out bit_vector(adder_width-1 downto 0);
---         co      : out bit);
---     end component adder;
-
---     type pproduct8 is array (natural range <>) of bit_vector (N-1 downto 0); -- bits of a partial product
---     signal p : pproduct8 (N-1 downto 0);              -- partial products
---     signal c : bit;
---     signal accumulator, p_padded : bit_vector(2*N-1 downto 0);
-
--- begin
-
---     -- compute partial products
---     partialproducts: for j in 7 downto 0 generate
---         ands: for i in 7 downto 0 generate
---             p(j)(i)    <= b(j) and a(i);
---         end generate ands;
---     end generate partialproducts;
-
---     -- sum partial products
---     gen_adders : for i in 0 to N-1 generate
---         p_padded <= b"0000_0000" & p(i)(N-1 downto 0);
-
---         adder_inst : adder 
---         generic map (adder_width => 2*N)
---         port map (
---             a => p_padded, b => accumulator , z => accumulator ,co => c
---         );
---     end generate gen_adders;
-
---     z <= accumulator;
-
-
--- end dataflow;
-
--- architecture behavioral of multiplier is
-
--- begin
-
---     z <= std_logic_vector(signed(a) * signed(b));
-
--- end behavioral;
-
-
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_BIT.ALL;
 
 entity multiplier is
     generic (N : natural := 8);
     port (
-        a, b : in std_logic_vector(N-1 downto 0);  -- Use std_logic_vector for inputs
-        s, v : in std_logic;                      -- Adjust type for single-bit signals
-        z    : out std_logic_vector(2*N-1 downto 0) -- Use std_logic_vector for output
+        a, b : in  bit_vector(N-1 downto 0);  
+        s, v : in  bit;                      
+        y    : out bit_vector(2*N-1 downto 0)
     );
 end multiplier;
 
@@ -110,45 +37,72 @@ architecture dataflow of multiplier is
     component adder is
         generic (N : integer);
         port (
-            a, b : in std_logic_vector(N-1 downto 0);
-            z    : out std_logic_vector(N-1 downto 0);
-            co   : out std_logic
+            a, b : in  bit_vector(N-1 downto 0);
+            y    : out bit_vector(N-1 downto 0);
+            co   : out bit
         );
     end component;
 
-    type pproduct8 is array (natural range <>) of std_logic_vector(N-1 downto 0); 
-    signal p : pproduct8 (N-1 downto 0); -- Partial products
-    signal c : std_logic;
-    signal accumulator, p_padded : std_logic_vector(2*N-1 downto 0);
+    type pproduct is array (natural range <>) of bit_vector(N-1 downto 0); 
+    signal p : pproduct (N-1 downto 0); -- Partial products
+    -- signal c : bit_vector(N-1 downto 0);
+    signal a1,a2,a3,a4,a5,a6,a7 : bit_vector(N-1 downto 0);
+    signal b1,b2,b3,b4,b5,b6,b7 : bit_vector(N-1 downto 0);
+    signal c1,c2,c3,c4,c5,c6,c7 : bit;                          -- carry
+    signal s1,s2,s3,s4,s5,s6,s7 : bit_vector(N-1 downto 0);     -- sum
 
 begin
     -- Compute partial products
-    partialproducts: for j in 7 downto 0 generate
-        ands: for i in 7 downto 0 generate
+    partialproducts: for j in N-1 downto 0 generate
+        ands: for i in N-1 downto 0 generate
             p(j)(i) <= b(j) and a(i);
         end generate ands;
     end generate partialproducts;
 
     -- Sum partial products
-    gen_adders: for i in 0 to N-1 generate
-        p_padded <= b"0000_0000" & p(i); -- Extend partial product with zeros
-        adder_inst: adder
-            generic map (N => 2*N)
-            port map (
-                a => p_padded,
-                b => accumulator,
-                z => accumulator,
-                co => c
-            );
-    end generate gen_adders;
+    y(0)    <= a(0) AND b(0);       -- half adder
 
-    z <= accumulator;
+    a1      <= '0' & a(N-1 downto 1)    when b(0) = '1' else b"0000_0000";
+    b1      <= a                        when b(1) = '1' else b"0000_0000";
+    x1:     entity work.adder(dataflow) port map(a1, b1, s1, c1);
+    y(1)    <= s1(0);
+
+    a2      <= c1 & s1(N-1 downto 1);
+    b2      <= a when b(2) = '1' else b"0000_0000";
+    x2:     entity work.adder(dataflow) port map(a2, b2, s2, c2);
+    y(2)    <= s2(0);
+
+    a3      <= c2 & s2(N-1 downto 1);
+    b3      <= a when b(3) = '1' else b"0000_0000";
+    x3:     entity work.adder(dataflow) port map(a3, b3, s3, c3);
+    y(3)    <= s3(0);
+
+    a4      <= c3 & s3(N-1 downto 1);
+    b4      <= a when b(4) = '1' else b"0000_0000";
+    x4:     entity work.adder(dataflow) port map(a4, b4, s4, c4);
+    y(4)    <= s4(0);
+
+    a5      <= c4 & s4(N-1 downto 1);
+    b5      <= a when b(5) = '1' else b"0000_0000";
+    x5:     entity work.adder(dataflow) port map(a5, b5, s5, c5);
+    y(5)    <= s5(0);
+
+    a6      <= c5 & s5(N-1 downto 1);
+    b6      <= a when b(6) = '1' else b"0000_0000";
+    x6:     entity work.adder(dataflow) port map(a6, b6, s6, c6);
+    y(6)    <= s6(0);
+
+    a7      <= c6 & s6(N-1 downto 1);
+    b7      <= a when b(7) = '1' else b"0000_0000";
+    x7:     entity work.adder(dataflow) port map(a7, b7, s7, c7);
+    y(14 downto 7)    <= s7;
+    y(15)   <= c7;
 
 end dataflow;
 
 -- Behavioral architecture
 architecture behavioral of multiplier is
 begin
-    z <= std_logic_vector(signed(a) * signed(b));
+    y <= bit_vector(unsigned(a) * unsigned(b));
 end behavioral;
 
