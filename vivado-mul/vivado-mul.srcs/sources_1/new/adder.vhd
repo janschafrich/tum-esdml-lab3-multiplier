@@ -34,9 +34,9 @@ use IEEE.NUMERIC_BIT.ALL;
 entity adder is
     generic(N : integer := 8);
     Port (
-        a, b    : in bit_vector (N-1 downto 0);
-        y       : out bit_vector (N-1 downto 0);
-        co      : out bit
+        a, b : in bit_vector (N-1 downto 0);
+        y    : out bit_vector (N-1 downto 0);
+        co   : out bit
      );
 end adder;
 
@@ -60,6 +60,7 @@ begin
         y(i)  <= a_xor_b(i) XOR c(i-1);
         end generate g3;
     end generate g1;
+
     co <= c(N-1);
 
 end dataflow;
