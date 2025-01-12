@@ -4,18 +4,5 @@ Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 Running: /home/jscha/software/xilinx/Vivado/2024.1/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot tb_multiplier_behav xil_defaultlib.tb_multiplier -log elaborate.log 
 Using 8 slave threads.
 Starting static elaboration
-Completed static elaboration
-Starting simulation data flow analysis
-Completed simulation data flow analysis
-Time Resolution for simulation is 1ps
-Compiling package std.standard
-Compiling package std.textio
-Compiling package ieee.numeric_bit
-Compiling package ieee.std_logic_1164
-Compiling package ieee.numeric_std
-Compiling package unisim.vcomponents
-Compiling architecture dataflow of entity xil_defaultlib.adder [adder_default]
-Compiling architecture dataflow of entity xil_defaultlib.multiplier [multiplier_default_uniq_0]
-Compiling architecture behavioral of entity xil_defaultlib.multiplier [multiplier_default_uniq_1]
-Compiling architecture behavioral of entity xil_defaultlib.tb_multiplier
-Built simulation snapshot tb_multiplier_behav
+ERROR: [VRFC 10-9564] expression has 16 elements; expected 8 [/home/jscha/nextcloud/msei/ws24/esdml/labs/lab3-multiplier/vivado-mul/vivado-mul.srcs/sources_1/new/multiplier.vhd:174]
+ERROR: [XSIM 43-3321] Static elaboration of top level VHDL design unit tb_multiplier in library work failed.

@@ -19,13 +19,13 @@ architecture Behavioral of tb_multiplier is
 
     signal a, b     : bit_vector(mul_width - 1 downto 0);
     signal s,v      : bit;
-    signal y1, y2   : bit_vector(mul_width*2 downto 0);
+    signal y_dataflow, y_behav   : bit_vector(mul_width*2 downto 0);
 
 
 begin
 
-    DUT1 : entity work.multiplier(dataflow)   generic map (N => mul_width) port map (a,b,s,v,y1);
-    DUT2 : entity work.multiplier(behavioral) generic map (N => mul_width) port map (a,b,s,v,y2);
+    DUT1 : entity work.multiplier(dataflow_s)   generic map (N => mul_width) port map (a,b,s,v,y_dataflow);
+    DUT2 : entity work.multiplier(behavioral) generic map (N => mul_width) port map (a,b,s,v,y_behav);
 
 
     stimuli : process
@@ -38,17 +38,17 @@ begin
                 for bi in 0 to 2**8-1 loop
                     b <= bit_vector( to_unsigned(bi, mul_width) );
                     wait for 1 ns;
-                    assert y1 = y2 report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
+                    assert y_dataflow = y_behav report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
                 end loop;
             end loop;
             
         elsif s = '1' and v = '0' then
-            for ai in -2**7 to 2**7-1 loop
+            for ai in 0 to 2**8-1 loop
                 a <= bit_vector( to_signed(ai, mul_width) );
-                for bi in -2**7 to 2**7-1 loop
+                for bi in 0 to 2**8-1 loop
                     b <= bit_vector( to_signed(bi, mul_width) );
                     wait for 1 ns;
-                    assert y1 = y2 report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
+                    assert y_dataflow = y_behav report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
                 end loop;
             end loop;
         end if;

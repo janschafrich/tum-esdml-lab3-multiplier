@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_multiplier_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_multiplier" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="32,763.830 ns"></ZoomStartTime>
+      <ZoomEndTime time="32,788.854 ns"></ZoomEndTime>
+      <Cursor1Time time="32,769.547 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="189"></NameColumnWidth>
+      <ValueColumnWidth column_width="232"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="9" />
+   <wvobject type="logic" fp_name="/tb_multiplier/s">
+      <obj_property name="ElementShortName">s</obj_property>
+      <obj_property name="ObjectShortName">s</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_multiplier/v">
+      <obj_property name="ElementShortName">v</obj_property>
+      <obj_property name="ObjectShortName">v</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/a">
+      <obj_property name="ElementShortName">a[7:0]</obj_property>
+      <obj_property name="ObjectShortName">a[7:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/b">
+      <obj_property name="ElementShortName">b[7:0]</obj_property>
+      <obj_property name="ObjectShortName">b[7:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/DUT1/p">
+      <obj_property name="ElementShortName">p[7:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">p[7:0][15:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/tb_multiplier/DUT1/p[7]">
+         <obj_property name="ElementShortName">[7][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[7][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_multiplier/DUT1/p[6]">
+         <obj_property name="ElementShortName">[6][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[6][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_multiplier/DUT1/p[5]">
+         <obj_property name="ElementShortName">[5][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[5][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_multiplier/DUT1/p[4]">
+         <obj_property name="ElementShortName">[4][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[4][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_multiplier/DUT1/p[3]">
+         <obj_property name="ElementShortName">[3][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[3][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_multiplier/DUT1/p[2]">
+         <obj_property name="ElementShortName">[2][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_multiplier/DUT1/p[1]">
+         <obj_property name="ElementShortName">[1][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_multiplier/DUT1/p[0]">
+         <obj_property name="ElementShortName">[0][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][15:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_multiplier/DUT1/c6">
+      <obj_property name="ElementShortName">c6</obj_property>
+      <obj_property name="ObjectShortName">c6</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_multiplier/DUT1/c7">
+      <obj_property name="ElementShortName">c7</obj_property>
+      <obj_property name="ObjectShortName">c7</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/y_dataflow">
+      <obj_property name="ElementShortName">y_dataflow[16:0]</obj_property>
+      <obj_property name="ObjectShortName">y_dataflow[16:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/y_behav">
+      <obj_property name="ElementShortName">y_behav[16:0]</obj_property>
+      <obj_property name="ObjectShortName">y_behav[16:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>

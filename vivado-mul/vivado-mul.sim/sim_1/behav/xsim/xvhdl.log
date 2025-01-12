@@ -1,2 +1,4 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/jscha/nextcloud/msei/ws24/esdml/labs/lab3-multiplier/vivado-mul/vivado-mul.srcs/sources_1/new/multiplier.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'multiplier'
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/jscha/nextcloud/msei/ws24/esdml/labs/lab3-multiplier/vivado-mul/vivado-mul.srcs/sources_1/new/tb_multiplier.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'tb_multiplier'
