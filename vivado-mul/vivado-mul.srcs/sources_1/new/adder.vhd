@@ -32,7 +32,7 @@ use IEEE.NUMERIC_BIT.ALL;
 --use UNISIM.VComponents.all;
 
 entity adder is
-    generic(N : integer := 16);
+    generic(N : integer := 8);
     Port (
         a, b : in bit_vector (N-1 downto 0);
         y    : out bit_vector (N-1 downto 0);
@@ -62,5 +62,6 @@ begin
     end generate g1;
 
     co <= c(N-1);
+    -- o   <= c(N-1) XOR c(N-2);       -- overflow
 
 end dataflow;

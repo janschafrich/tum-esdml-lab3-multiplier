@@ -9,28 +9,30 @@ entity tb_multiplier is end tb_multiplier;
 architecture Behavioral of tb_multiplier is
 
     COMPONENT multiplier is
-        generic (N : integer);
-        port (  a,b : in bit_vector(N -1 downto 0);
+        generic (IN_WIDTH : integer;
+                OUT_WIDTH : integer);
+        port (  a,b : in bit_vector(IN_WIDTH - 1 downto 0);
                 s,v : in bit;
-                y : out bit_vector(2*N downto 0));
+                y : out bit_vector(2*IN_WIDTH - 1 downto 0));
     end COMPONENT multiplier;
 
     constant mul_width : integer := 8;
 
     signal a, b     : bit_vector(mul_width - 1 downto 0);
     signal s,v      : bit;
-    signal y_dataflow, y_behav   : bit_vector(mul_width*2 downto 0);
+    signal y_dataflow, y_behav   : bit_vector(mul_width*2 - 1 downto 0);
 
 
 begin
 
-    DUT1 : entity work.multiplier(dataflow_s)   generic map (N => mul_width) port map (a,b,s,v,y_dataflow);
-    DUT2 : entity work.multiplier(behavioral) generic map (N => mul_width) port map (a,b,s,v,y_behav);
+    DUT1 : entity work.multiplier(dataflow)   generic map (IN_WIDTH => mul_width, OUT_WIDTH => 2*mul_width) 
+                                                port map (a,b,s,v,y_dataflow);
+    DUT2 : entity work.multiplier(behavioral) generic map (IN_WIDTH => mul_width, OUT_WIDTH => 2*mul_width) port map (a,b,s,v,y_behav);
 
 
     stimuli : process
     begin
-        s <= '1'; v <= '0';
+        s <= '0'; v <= '0';
 
         if s = '0' and v = '0' then
             for ai in 0 to 2**8-1 loop
