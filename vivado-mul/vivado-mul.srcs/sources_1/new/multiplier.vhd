@@ -23,13 +23,12 @@ library IEEE;
 use IEEE.NUMERIC_BIT.ALL;
 
 entity multiplier is
-    generic (   IN_WIDTH : natural := 8;
-                OUT_WIDTH : natural := 16
+    generic (   N : natural := 8
     );
     port (
-        a, b : in  bit_vector(IN_WIDTH - 1 downto 0);  
+        a, b : in  bit_vector(N - 1 downto 0);  
         s, v : in  bit;                      
-        y    : out bit_vector(2*IN_WIDTH - 1 downto 0)
+        y    : out bit_vector(2*N - 1 downto 0)
     );
 end multiplier;
 
@@ -37,65 +36,88 @@ end multiplier;
 architecture dataflow of multiplier is
 
     component adder is
-        generic (IN_WIDTH : integer);
+        generic (N : integer);
         port (
-            a, b    : in  bit_vector(IN_WIDTH-1 downto 0);
-            y       : out bit_vector(IN_WIDTH-1 downto 0);
+            a, b    : in  bit_vector(N-1 downto 0);
+            y       : out bit_vector(N-1 downto 0);
             co     : out bit
 
         );
     end component;
 
-    constant EXTENSION_WIDTH    : integer := OUT_WIDTH - IN_WIDTH;
+    -- constant EXTENSION_WIDTH    : integer := 2*N - N;
 
-    type pproduct_t is array (0 to IN_WIDTH - 1) of bit_vector(IN_WIDTH*2-1 downto 0); 
-    type product_extension_t is array (0 to IN_WIDTH - 1) of bit_vector (EXTENSION_WIDTH downto 0);
+    type pproduct_t is array (0 to N-1) of bit_vector(2*N-1 downto 0);    -- N-1 parital products extended to 2*N bits
+    type psum_t     is array (0 downto N - 2) of bit_vector(2*N downto 0); -- N-2 partial sums including overflow bit
+
+    type product_extension_t is array (0 to N - 1) of bit_vector (N-1 downto 0);
     
-    signal pproducts : pproduct_t;
+    signal pp_stage_out : pproduct_t;
+    signal adder_stage_out     : psum_t;
     signal prod_extensions : product_extension_t;
 
 
 begin
     -- Compute partial products
-    pp_array_gen: for i in 0 to IN_WIDTH-1 generate
-        pp_extended : for j in 0 to OUT_WIDTH-1 generate
-                pproducts(i)(j) <= b(i) AND a(j) when j < IN_WIDTH else prod_extensions(i)(j-EXTENSION_WIDTH);
+    pp_array_gen: for i in 0 to N-1 generate
+        pp_extended : for j in 0 to 2*N-1 generate
+                pp_stage_out(i)(j) <= b(i) AND a(j) when j < N else -- multpi for N-1 : 0
+                prod_extensions(i)(j - N) when j >= N else          -- connect extension signal from 15 to N
+                '0';
         end generate pp_extended;
     end generate pp_array_gen;
 
     -- extend with sign or zero
-    prod_extensions_gen: for i in 0 to IN_WIDTH-1 generate
-        prod_extensions(i) <= (others => pproducts(i)(IN_WIDTH - 1)) when s = '1' else -- arithmetic sign extension
+    prod_extensions_gen: for i in 0 to N-1 generate
+        prod_extensions(i) <= (others => pp_stage_out(i)(N - 1)) when s = '1' else -- arithmetic sign extension
                               (others => '0');                                          -- logical (zero) extension
     end generate prod_extensions_gen;
 
-    -- add extended partial products
-    adder_gen : for i in 1 to IN_WIDTH - 1 generate
-        signal extpp_in, acc_in, adder_out  : bit_vector(2*IN_WIDTH - 1 downto 0) := (others => '0');
+
+    -- generate the adders to sum partial result
+    adder_gen : for i in 1 to N - 1 generate
+        signal ppg_in, b_in, adder_out :    bit_vector((2*N - i) - 1 downto 0) := (others => '0') ;
         signal co                           : bit;
     begin
-        -- logical shift left by row number j bits 
+        -- cut the unneeded sign bits
+        ppg_in <= pp_stage_out(i)((2*N - i) - 1 downto 0);
+        
+        adder_inputs : if i = 1 generate
+            -- first adder use partial products 0 and 1
+            b_in                                    <= pp_stage_out(0)(2*N - 1 downto 1);
+            adder_stage_out(0)(2*N - i downto 0)    <= co & adder_out;                         -- cat carry with sum
+        else generate
+            -- others: use partial product and output of previous adder stage
+            b_in                                    <= adder_stage_out(i - 2)(2*N - i downto 1);  -- mv window sll,  bit0 is used as output
+            adder_stage_out(i - 1)(2*N - i downto 0)<= co & adder_out;         -- cat carry with sum
+        end generate adder_inputs;      
 
-        extpp_in <= ( pproducts(i)(OUT_WIDTH - 1 downto i)  &  (i - 1 downto 0 => '0') ) when i < OUT_WIDTH else (others => '0');
 
         adder_inst : entity work.adder
             generic map (
-                N => OUT_WIDTH
+                N => 2*N - i
             )
             port map (
-                a => extpp_in,
-                b => adder_out,
-                y => adder_out
+                a => ppg_in,
+                b => b_in,
+                y => adder_out,
+                co => co
             );
 
     end generate adder_gen;
 
+    -- output results
+    y(0)        <= pp_stage_out(0)(0);
+
+    result_gen : for i in 1 to N - 1 generate
+        y(i) <= adder_stage_out(i-1)(0);
+    end generate result_gen;
+
+    y(2*N - 1 downto N) <= adder_stage_out(N - 2)(N downto 1); 
+
 end dataflow;
 
   
-
-
-
 
 -- Behavioral architecture
 architecture behavioral of multiplier is

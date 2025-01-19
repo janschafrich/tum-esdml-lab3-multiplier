@@ -9,11 +9,10 @@ entity tb_multiplier is end tb_multiplier;
 architecture Behavioral of tb_multiplier is
 
     COMPONENT multiplier is
-        generic (IN_WIDTH : integer;
-                OUT_WIDTH : integer);
-        port (  a,b : in bit_vector(IN_WIDTH - 1 downto 0);
+        generic (N : integer);
+        port (  a,b : in bit_vector(N - 1 downto 0);
                 s,v : in bit;
-                y : out bit_vector(2*IN_WIDTH - 1 downto 0));
+                y : out bit_vector(2*N - 1 downto 0));
     end COMPONENT multiplier;
 
     constant mul_width : integer := 8;
@@ -25,9 +24,8 @@ architecture Behavioral of tb_multiplier is
 
 begin
 
-    DUT1 : entity work.multiplier(dataflow)   generic map (IN_WIDTH => mul_width, OUT_WIDTH => 2*mul_width) 
-                                                port map (a,b,s,v,y_dataflow);
-    DUT2 : entity work.multiplier(behavioral) generic map (IN_WIDTH => mul_width, OUT_WIDTH => 2*mul_width) port map (a,b,s,v,y_behav);
+    DUT1 : entity work.multiplier(dataflow)   generic map (N => mul_width) port map (a,b,s,v,y_dataflow);
+    DUT2 : entity work.multiplier(behavioral) generic map (N => mul_width) port map (a,b,s,v,y_behav);
 
 
     stimuli : process
