@@ -1,9 +1,8 @@
 LIBRARY IEEE;
-use ieee.std_logic_1164.all;
 USE ieee.numeric_bit.all;
 
--- library UNISIM;
--- use UNISIM.VComponents.all;
+library UNISIM;
+use UNISIM.VComponents.all;
 
 entity tb_multiplier is end tb_multiplier;
 
@@ -31,7 +30,7 @@ begin
 
     stimuli : process
     begin
-        s <= '1'; v <= '0';
+        s <= '0'; v <= '0';
 
         if s = '0' and v = '0' then
             for ai in 0 to 2**8-1 loop

@@ -20,16 +20,8 @@
 
 
 library IEEE;
+use ieee.std_logic_1164.all;
 use IEEE.NUMERIC_BIT.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity adder is
     generic(N : integer := 8);
