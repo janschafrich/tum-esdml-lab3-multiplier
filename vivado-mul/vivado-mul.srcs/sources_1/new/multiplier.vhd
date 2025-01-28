@@ -4,7 +4,7 @@
 -- -- 
 -- -- Create Date: 01/05/2025 09:51:19 AM
 -- -- Design Name: 
--- -- Module Name: multiplier - Behavioral
+-- -- Module Name: multiplier_def - Behavioral
 -- -- Project Name: 
 -- -- Target Devices: 
 -- -- Tool Versions: 
@@ -22,21 +22,21 @@ library IEEE;
 use ieee.std_logic_1164.all;
 use IEEE.NUMERIC_BIT.ALL;
 
-entity multiplier is
+entity multiplier_def is
     generic (   N : natural := 8
     );
     port (
         a, b : in  bit_vector(N - 1 downto 0);  
-        s, v : in  bit;                      
+        s    : in  bit;                      
         y    : out bit_vector(2*N - 1 downto 0)
     );
-end multiplier;
+end multiplier_def;
 
 
-architecture dataflow of multiplier is
+architecture dataflow of multiplier_def is
 
     component adder is
-        generic (N : integer);
+        generic (N : natural);
         port (
             a, b    : in  bit_vector(N-1 downto 0);
             y       : out bit_vector(N-1 downto 0);
@@ -50,7 +50,7 @@ architecture dataflow of multiplier is
     signal a_and_b          : pproduct_t;
     signal pp_stage_out     : pproduct_t;
     signal adder_stage_out  : pproduct_t;
-    signal a_ext, b_ext   : bit_vector(N*2-1 downto 0) := (others => '0');
+    signal a_ext, b_ext     : bit_vector(N*2-1 downto 0) := (others => '0');
 
 
 begin
@@ -95,7 +95,6 @@ begin
             y => adder_stage_out(0)(N*2 - 1 downto 0)
         );
 
-    
     adder_gen : for i in 1 to N*2-2 generate 
         adder_inst : entity work.adder
             generic map (
@@ -112,18 +111,91 @@ begin
 
 end dataflow;
 
+
+
+
+library IEEE;
+use ieee.std_logic_1164.all;
+use IEEE.NUMERIC_BIT.ALL;
+
+entity multiplier is
+    generic (   N : natural := 8
+    );
+    port (
+        a, b : in  bit_vector(N - 1 downto 0);  
+        s, v : in  bit;                      
+        y    : out bit_vector(2*N - 1 downto 0)
+    );
+end multiplier;
+
+architecture dataflow of multiplier is
+
+    component multiplier_def is
+        generic (N : natural);
+        port (
+            a, b    : in bit_vector(N-1 downto 0);
+            s       : in bit;
+            y       : out bit_vector(N*2-1 downto 0)
+        );
+    end component;
+
+    signal a_i, b_i             : bit_vector(N-1 downto 0);
+    signal res_lower, res_upper : bit_vector(N-1 downto 0);
+    signal res_scalar           : bit_vector(N*2-1 downto 0);
+
+begin
+
+        a_i <= a;
+        b_i <= b;
+
+
+        mul_upper : entity work.multiplier_def 
+            generic map (
+                N => N/2
+            )
+            port map (
+                a => a_i(N-1 downto N/2),
+                b => b_i(N-1 downto N/2),
+                s => s,
+                y => res_upper
+            );
+                
+        mul_lower : entity work.multiplier_def 
+            generic map (
+                N => N/2
+            )
+            port map (
+                a => a_i(N/2-1 downto 0),
+                b => b_i(N/2-1 downto 0),
+                s => s,
+                y => res_lower
+            );
+
+        mul_full : entity work.multiplier_def 
+            generic map (
+                N => N
+            )
+            port map (
+                a => a_i,
+                b => b_i,
+                s => s,
+                y => res_scalar
+            );
+                        
+        y   <= res_upper & res_lower when v = '1' else res_scalar;
+
+end architecture dataflow;
   
 
 -- Behavioral architecture
 architecture behavioral of multiplier is
 begin
     y <=    bit_vector(unsigned(a)  * unsigned(b) ) when s = '0' and v = '0'                      else
-            bit_vector(  signed(a)  *   signed(b))  when s = '1' and v = '0';
-            --                             else
-            -- bit_vector(unsigned( a(7 downto 4)) * unsigned( b(7 downto 4)) ) &
-            -- bit_vector(unsigned( a(3 downto 0)) * unsigned( b(3 downto 0)) ) when s = '0' and v = '1'   else
-            -- bit_vector(  signed( a(7 downto 4)) *   signed( b(7 downto 4)) ) &
-            -- bit_vector(  signed( a(3 downto 0)) *   signed( b(3 downto 0)) );
+            bit_vector(  signed(a)  *   signed(b))  when s = '1' and v = '0'                      else
+            bit_vector(unsigned( a(7 downto 4)) * unsigned( b(7 downto 4)) ) &
+            bit_vector(unsigned( a(3 downto 0)) * unsigned( b(3 downto 0)) ) when s = '0' and v = '1'   else
+            bit_vector(  signed( a(7 downto 4)) *   signed( b(7 downto 4)) ) &
+            bit_vector(  signed( a(3 downto 0)) *   signed( b(3 downto 0)) );
 
 end behavioral;
 
