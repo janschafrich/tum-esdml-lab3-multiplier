@@ -23,11 +23,15 @@ architecture Behavioral of tb_multiplier is
 
 begin
 
-    DUT1 : entity work.multiplier(dataflow_new)   generic map (N => mul_width) port map (a,b,s,v,y_dataflow);
+    DUT1 : entity work.multiplier(dataflow)   generic map (N => mul_width) port map (a,b,s,v,y_dataflow);
     DUT2 : entity work.multiplier(behavioral) generic map (N => mul_width) port map (a,b,s,v,y_behav);
 
 
+
+
     stimuli : process
+        variable wrong_result   : boolean;
+        variable ErrorCount : integer := 0;
     begin
 
         s <= '0'; v <= '0';
@@ -69,9 +73,13 @@ begin
         -- assert (y_dataflow = b"0100_0000" AND y_behav = b"0100_0000")
         --     report "-128 * -128 failed"
         --     severity error;
-
+        
         -- N = 8 tests
+        ---------------------------------------------------------------------------------------------------
         -- edge cases
+        ---------------------------------------------------------------------------------------------------
+
+        -- unsigned
         a <= b"0000_0000"; 
         b <= b"0000_0000";
         wait for 10 ns;
@@ -86,8 +94,7 @@ begin
             report "2 * 2 = 4 failed"
             severity error;
 
-
-
+        -- signed
         s <= '1';
 
         a <= "10000000";        -- -128
@@ -112,33 +119,87 @@ begin
             severity error;
 
 
+        ---------------------------------------------------------------------------------------------------
         -- test all cases
+        ---------------------------------------------------------------------------------------------------
+
+        s <= '0';
+        v <= '0';
+
+        a <= b"1000_1000";        -- -8   -8 
+        b <= b"1000_1000";        -- -8   -8
+        wait for 10 ns;
+        assert (y_dataflow = b"0100_0000_0100_0000" AND y_behav = b"0100_0000_0100_0000")
+            report "-8 :: -8  * -8 :: -8  = 64 :: 64 failed"
+            severity error;
+
         if s = '0' and v = '0' then
             for ai in 0 to 2**8-1 loop
                 a <= bit_vector( to_unsigned(ai, mul_width) );
                 for bi in 0 to 2**8-1 loop
                     b <= bit_vector( to_unsigned(bi, mul_width) );
                     wait for 1 ns;
-                    assert y_dataflow = y_behav report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
+                    if y_dataflow /= y_behav then
+                        wrong_result := True;
+                        ErrorCount := ErrorCount + 1;
+                    else 
+                        wrong_result := false;
+                    end if;
+                    assert wrong_result = false report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
                 end loop;
             end loop;
-            
+  
         elsif s = '1' and v = '0' then
             for ai in 0 to 2**8-1 loop
                 a <= bit_vector( to_signed(ai, mul_width) );
                 for bi in 0 to 2**8-1 loop
                     b <= bit_vector( to_signed(bi, mul_width) );
                     wait for 1 ns;
-                    assert y_dataflow = y_behav report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
+                    if y_dataflow /= y_behav then
+                        wrong_result := True;
+                        ErrorCount := ErrorCount + 1;
+                    else 
+                        wrong_result := false;
+                    end if;
+                    assert wrong_result = false report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
+                end loop;
+            end loop;
+
+        elsif s = '0' and v = '1' then
+            for ai in 0 to 2**3-1 loop
+                a <= bit_vector( to_unsigned(ai, mul_width/2) ) & bit_vector( to_unsigned(ai, mul_width/2) );
+                for bi in 0 to 2**3-1 loop
+                    b <= bit_vector( to_unsigned(bi, mul_width/2) ) & bit_vector( to_unsigned(bi, mul_width/2) );
+                    wait for 1 ns;
+                    if y_dataflow /= y_behav then
+                        wrong_result := True;
+                        ErrorCount := ErrorCount + 1;
+                    else 
+                        wrong_result := false;
+                    end if;
+                    assert wrong_result = false report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
+                end loop;
+            end loop;
+
+        elsif s = '1' and v = '1' then
+            for ai in 0 to 2**3-1 loop
+                a <= bit_vector( to_signed(ai, mul_width/2) ) & bit_vector( to_signed(ai, mul_width/2) );
+                for bi in 0 to 2**3-1 loop
+                    b <= bit_vector( to_signed(bi, mul_width/2) ) & bit_vector( to_signed(bi, mul_width/2) );
+                    wait for 1 ns;
+                    if y_dataflow /= y_behav then
+                        wrong_result := True;
+                        ErrorCount := ErrorCount + 1;
+                    else 
+                        wrong_result := false;
+                    end if;
+                    assert wrong_result = false report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
                 end loop;
             end loop;
         end if;
 
-    -- End of testbench
-    assert false
-    report "Simulation complete, all test cases passed"
-    severity failure;
-
-        -- wait;
+        -- End of testbench
+        report "Test completed with " & integer'image(ErrorCount) & " errors";
+        wait;
     end process;
 end Behavioral; 
