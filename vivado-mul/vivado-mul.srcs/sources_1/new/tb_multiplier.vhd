@@ -2,8 +2,6 @@ LIBRARY IEEE;
 use ieee.std_logic_1164.all;
 USE ieee.numeric_bit.all;
 
--- library UNISIM;
--- use UNISIM.VComponents.all;
 
 entity tb_multiplier is end tb_multiplier;
 
@@ -25,14 +23,96 @@ architecture Behavioral of tb_multiplier is
 
 begin
 
-    DUT1 : entity work.multiplier(dataflow)   generic map (N => mul_width) port map (a,b,s,v,y_dataflow);
+    DUT1 : entity work.multiplier(dataflow_new)   generic map (N => mul_width) port map (a,b,s,v,y_dataflow);
     DUT2 : entity work.multiplier(behavioral) generic map (N => mul_width) port map (a,b,s,v,y_behav);
 
 
     stimuli : process
     begin
-        s <= '1'; v <= '0';
 
+        s <= '0'; v <= '0';
+
+        -- N = 4 tests
+        -- a <= "0000"; 
+        -- b <= "0000";
+        -- wait for 10 ns;
+        -- assert (y_dataflow = x"0000" AND y_behav = x"0000")
+        --     report "0 * 0 failed"
+        --     severity error;
+
+        -- a <= "0010"; 
+        -- b <= "0010";
+        -- wait for 10 ns;
+        -- assert (y_dataflow = x"0004" AND y_behav = x"0004")
+        --     report "2 * 2 = 4 failed"
+        --     severity error;
+
+        -- s <= '1';
+
+        -- a <= "1000";        -- -8
+        -- b <= "0111";        -- 7
+        -- wait for 10 ns;
+        -- assert (y_dataflow = b"1100_1000" AND y_behav = b"1100_1000")
+        --     report "-128 * 1 failed"
+        --     severity error;
+
+        -- a <= "0111";        -- 7
+        -- b <= "1000";        -- -8
+        -- wait for 10 ns;
+        -- assert (y_dataflow = b"1100_1000" AND y_behav = b"1100_1000")
+        --     report "1 * -128 failed"
+        --     severity error;
+
+        -- a <= "1000";        -- -8
+        -- b <= "1000";        -- -8
+        -- wait for 10 ns;
+        -- assert (y_dataflow = b"0100_0000" AND y_behav = b"0100_0000")
+        --     report "-128 * -128 failed"
+        --     severity error;
+
+        -- N = 8 tests
+        -- edge cases
+        a <= b"0000_0000"; 
+        b <= b"0000_0000";
+        wait for 10 ns;
+        assert (y_dataflow = x"0000" AND y_behav = x"0000")
+            report "0 * 0  = 0 failed"
+            severity error;
+
+        a <= b"0000_0010"; 
+        b <= b"0000_0010";
+        wait for 10 ns;
+        assert (y_dataflow = x"0004" AND y_behav = x"0004")
+            report "2 * 2 = 4 failed"
+            severity error;
+
+
+
+        s <= '1';
+
+        a <= "10000000";        -- -128
+        b <= "00000001";        -- 1
+        wait for 10 ns;
+        assert (y_dataflow = b"1111_1111_1000_0000" AND y_behav = b"1111_1111_1000_0000")
+            report "-128 * 1 = -128 failed"
+            severity error;
+
+        a <= "00000001";        -- 1
+        b <= "10000000";        -- -128
+        wait for 10 ns;
+        assert (y_dataflow = b"1111_1111_1000_0000" AND y_behav = b"1111_1111_1000_0000")
+            report "1 * -128 = -128 failed"
+            severity error;
+
+        a <= "10000000";        -- -128
+        b <= "10000000";        -- -128
+        wait for 10 ns;
+        assert (y_dataflow = b"0100_0000_0000_0000" AND y_behav = b"0100_0000_0000_0000")
+            report "-128 * -128 = 16384 failed"
+            severity error;
+
+
+        -- test all cases
         if s = '0' and v = '0' then
             for ai in 0 to 2**8-1 loop
                 a <= bit_vector( to_unsigned(ai, mul_width) );
@@ -54,6 +134,11 @@ begin
             end loop;
         end if;
 
-        wait;
+    -- End of testbench
+    assert false
+    report "Simulation complete, all test cases passed"
+    severity failure;
+
+        -- wait;
     end process;
 end Behavioral; 

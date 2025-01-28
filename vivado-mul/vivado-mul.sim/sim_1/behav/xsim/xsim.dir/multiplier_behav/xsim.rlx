@@ -1,0 +1,12 @@
+
+{ 
+    crc :  8431024201586536941  , 
+    ccp_crc :  0  , 
+    cmdline : " --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot multiplier_behav xil_defaultlib.multiplier" , 
+    buildDate : "Jun 14 2024" , 
+    buildTime : "09:10:06" , 
+    linkCmd : "/usr/bin/gcc -Wa,-W  -O -fPIC  -m64  -Wl,--no-as-needed  -Wl,--unresolved-symbols=ignore-all  -o \"xsim.dir/multiplier_behav/xsimk\"   \"xsim.dir/multiplier_behav/obj/xsim_0.lnx64.o\" \"xsim.dir/multiplier_behav/obj/xsim_1.lnx64.o\" -L\"/home/jscha/software/xilinx/Vivado/2024.1/lib/lnx64.o\" -lrdi_simulator_kernel    -L/home/jscha/software/xilinx/Vivado/2024.1/lib/lnx64.o/../../tps/lnx64/gcc-9.3.0/bin/../lib64 -Wl,--disable-new-dtags -Wl,-rpath=/home/jscha/software/xilinx/Vivado/2024.1/lib/lnx64.o/../../tps/lnx64/gcc-9.3.0/bin/../lib64 -lrdi_simbridge_kernel" , 
+    aggregate_nets : 
+    [ 
+    ] 
+} 

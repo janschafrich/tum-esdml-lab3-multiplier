@@ -12,14 +12,8 @@ Compiling package std.standard
 Compiling package std.textio
 Compiling package ieee.std_logic_1164
 Compiling package ieee.numeric_bit
-Compiling architecture dataflow of entity xil_defaultlib.adder [\adder(n=15)\]
-Compiling architecture dataflow of entity xil_defaultlib.adder [\adder(n=14)\]
-Compiling architecture dataflow of entity xil_defaultlib.adder [\adder(n=13)\]
-Compiling architecture dataflow of entity xil_defaultlib.adder [\adder(n=12)\]
-Compiling architecture dataflow of entity xil_defaultlib.adder [\adder(n=11)\]
-Compiling architecture dataflow of entity xil_defaultlib.adder [\adder(n=10)\]
-Compiling architecture dataflow of entity xil_defaultlib.adder [\adder(n=9)\]
-Compiling architecture dataflow of entity xil_defaultlib.multiplier [multiplier_default_uniq_0]
+Compiling architecture dataflow of entity xil_defaultlib.adder [\adder(n=16)\]
+Compiling architecture dataflow_new of entity xil_defaultlib.multiplier [multiplier_default_uniq_0]
 Compiling architecture behavioral of entity xil_defaultlib.multiplier [multiplier_default_uniq_1]
 Compiling architecture behavioral of entity xil_defaultlib.tb_multiplier
 Built simulation snapshot tb_multiplier_behav
