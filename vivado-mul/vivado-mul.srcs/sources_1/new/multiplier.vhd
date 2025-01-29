@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company:
--- Engineer:   Jan-Eric Schäfrich, Mathis Salmen, Mohamd
+-- Engineer:   Jan-Eric Schäfrich, Mathis Salmen, Mohamad Marwan Sidani
 --
 -- Create Date: 07/10/2023 04:04:01 PM
 -- Design Name:
@@ -164,7 +164,6 @@ library IEEE;
 use IEEE.NUMERIC_BIT.ALL;
 
 entity multiplier is
-    generic ( N : natural := 8);
     Port ( A : in BIT_VECTOR (7 downto 0);
            B : in BIT_VECTOR (7 downto 0);
            S : in BIT;
@@ -175,15 +174,17 @@ end multiplier;
 architecture dataflow of multiplier is
 
    component multiplier_def is
-      generic (N : natural);
-      port (
-          a, b    : in bit_vector(N-1 downto 0);
-          s       : in bit;
-          y       : out bit_vector(N*2-1 downto 0)
-      );
+        generic (N : natural);
+        port (
+            a, b    : in bit_vector(N-1 downto 0);
+            s       : in bit;
+            y       : out bit_vector(N*2-1 downto 0)
+        );
    end component;
 -- SIGNALS
 --- ENTER STUDENT CODE BELOW ---
+
+    constant N : natural := 8;
 
    signal a_i, b_i             : bit_vector(N-1 downto 0);
    signal res_lower, res_upper : bit_vector(N-1 downto 0);

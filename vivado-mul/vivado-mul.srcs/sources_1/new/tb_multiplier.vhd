@@ -38,10 +38,9 @@ end tb_multiplier;
 architecture behavioral of tb_multiplier is
 
     COMPONENT multiplier is
-        generic (N : integer);
-        port (  a,b : in bit_vector(N - 1 downto 0);
+        port (  a,b : in bit_vector(7 downto 0);
                 s,v : in bit;
-                y : out bit_vector(2*N - 1 downto 0));
+                y : out bit_vector(15 downto 0));
     end COMPONENT multiplier;
 
     constant mul_width : integer := 8;
@@ -53,8 +52,8 @@ architecture behavioral of tb_multiplier is
 begin
 
 --- ENTER STUDENT CODE BELOW ---
-    DUT1 : entity work.multiplier(dataflow)   generic map (N => mul_width) port map (a,b,s,v,y);
-    DUT2 : entity work.multiplier(behavioral) generic map (N => mul_width) port map (a,b,s,v,y_ref);
+    DUT1 : entity work.multiplier(dataflow)   port map (a,b,s,v,y);
+    DUT2 : entity work.multiplier(behavioral) port map (a,b,s,v,y_ref);
 
     stimuli : process
         variable ErrorCount_unv : integer := 0;
