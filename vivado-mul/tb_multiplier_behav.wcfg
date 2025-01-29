@@ -10,15 +10,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="65,566,998 ps"></ZoomStartTime>
-      <ZoomEndTime time="65,567,012 ps"></ZoomEndTime>
-      <Cursor1Time time="65,567,000 ps"></Cursor1Time>
+      <ZoomStartTime time="1,982.950 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,993.811 ns"></ZoomEndTime>
+      <Cursor1Time time="2,000.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="248"></NameColumnWidth>
-      <ValueColumnWidth column_width="222"></ValueColumnWidth>
+      <NameColumnWidth column_width="304"></NameColumnWidth>
+      <ValueColumnWidth column_width="148"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="6" />
+   <WVObjectSize size="16" />
    <wvobject type="logic" fp_name="/tb_multiplier/s">
       <obj_property name="ElementShortName">s</obj_property>
       <obj_property name="ObjectShortName">s</obj_property>
@@ -37,14 +37,58 @@
       <obj_property name="ObjectShortName">b[7:0]</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/tb_multiplier/y_behav">
-      <obj_property name="ElementShortName">y_behav[15:0]</obj_property>
-      <obj_property name="ObjectShortName">y_behav[15:0]</obj_property>
+   <wvobject type="array" fp_name="/tb_multiplier/y">
+      <obj_property name="ElementShortName">y[15:0]</obj_property>
+      <obj_property name="ObjectShortName">y[15:0]</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/tb_multiplier/y_dataflow">
-      <obj_property name="ElementShortName">y_dataflow[15:0]</obj_property>
-      <obj_property name="ObjectShortName">y_dataflow[15:0]</obj_property>
+   <wvobject type="array" fp_name="/tb_multiplier/y_ref">
+      <obj_property name="ElementShortName">y_ref[15:0]</obj_property>
+      <obj_property name="ObjectShortName">y_ref[15:0]</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/DUT1/mul_lower/a_and_b">
+      <obj_property name="ElementShortName">a_and_b[0:7][7:0]</obj_property>
+      <obj_property name="ObjectShortName">a_and_b[0:7][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/DUT1/mul_lower/pp_stage_out">
+      <obj_property name="ElementShortName">pp_stage_out[0:7][7:0]</obj_property>
+      <obj_property name="ObjectShortName">pp_stage_out[0:7][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/DUT1/mul_lower/adder_stage_out">
+      <obj_property name="ElementShortName">adder_stage_out[0:7][7:0]</obj_property>
+      <obj_property name="ObjectShortName">adder_stage_out[0:7][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/DUT1/mul_lower/a_ext">
+      <obj_property name="ElementShortName">a_ext[7:0]</obj_property>
+      <obj_property name="ObjectShortName">a_ext[7:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/DUT1/mul_lower/b_ext">
+      <obj_property name="ElementShortName">b_ext[7:0]</obj_property>
+      <obj_property name="ObjectShortName">b_ext[7:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/DUT1/mul_upper/a_and_b">
+      <obj_property name="ElementShortName">a_and_b[0:7][7:0]</obj_property>
+      <obj_property name="ObjectShortName">a_and_b[0:7][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/DUT1/mul_upper/pp_stage_out">
+      <obj_property name="ElementShortName">pp_stage_out[0:7][7:0]</obj_property>
+      <obj_property name="ObjectShortName">pp_stage_out[0:7][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/DUT1/mul_upper/adder_stage_out">
+      <obj_property name="ElementShortName">adder_stage_out[0:7][7:0]</obj_property>
+      <obj_property name="ObjectShortName">adder_stage_out[0:7][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/DUT1/mul_upper/a_ext">
+      <obj_property name="ElementShortName">a_ext[7:0]</obj_property>
+      <obj_property name="ObjectShortName">a_ext[7:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_multiplier/DUT1/mul_upper/b_ext">
+      <obj_property name="ElementShortName">b_ext[7:0]</obj_property>
+      <obj_property name="ObjectShortName">b_ext[7:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
    </wvobject>
 </wave_config>

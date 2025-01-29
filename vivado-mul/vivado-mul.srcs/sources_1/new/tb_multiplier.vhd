@@ -1,11 +1,41 @@
-LIBRARY IEEE;
-use ieee.std_logic_1164.all;
-USE ieee.numeric_bit.all;
+----------------------------------------------------------------------------------
+-- Company:
+-- Engineer: Jan-Eric Schäfrich, Mathis Salmen, Mohamad Marwan Sidani
+--
+-- Create Date: 07/19/2023 05:43:15 PM
+-- Design Name:
+-- Module Name: tb_multiplier - Behavioral
+-- Project Name:
+-- Target Devices:
+-- Tool Versions:
+-- Description:
+--
+-- Dependencies:
+--
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+--
+----------------------------------------------------------------------------------
 
 
-entity tb_multiplier is end tb_multiplier;
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
 
-architecture Behavioral of tb_multiplier is
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+USE IEEE.NUMERIC_BIT.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity tb_multiplier is
+--  Port ( );
+end tb_multiplier;
+
+architecture behavioral of tb_multiplier is
 
     COMPONENT multiplier is
         generic (N : integer);
@@ -16,81 +46,45 @@ architecture Behavioral of tb_multiplier is
 
     constant mul_width : integer := 8;
 
-    signal a, b     : bit_vector(mul_width - 1 downto 0);
-    signal s,v      : bit;
-    signal y_dataflow, y_behav   : bit_vector(mul_width*2 - 1 downto 0);
-
+    signal a, b      : bit_vector(mul_width - 1 downto 0);
+    signal s,v       : bit;
+    signal y, y_ref  : bit_vector(mul_width*2 - 1 downto 0);
 
 begin
 
-    DUT1 : entity work.multiplier(dataflow)   generic map (N => mul_width) port map (a,b,s,v,y_dataflow);
-    DUT2 : entity work.multiplier(behavioral) generic map (N => mul_width) port map (a,b,s,v,y_behav);
-
-
-
+--- ENTER STUDENT CODE BELOW ---
+    DUT1 : entity work.multiplier(dataflow)   generic map (N => mul_width) port map (a,b,s,v,y);
+    DUT2 : entity work.multiplier(behavioral) generic map (N => mul_width) port map (a,b,s,v,y_ref);
 
     stimuli : process
-        variable wrong_result   : boolean;
-        variable ErrorCount : integer := 0;
+        variable ErrorCount_unv : integer := 0;
+        variable ErrorCount_snv : integer := 0;
+        variable ErrorCount_uv : integer := 0;
+        variable ErrorCount_sv : integer := 0;
     begin
 
-        s <= '0'; v <= '0';
-
-        -- N = 4 tests
-        -- a <= "0000"; 
-        -- b <= "0000";
-        -- wait for 10 ns;
-        -- assert (y_dataflow = x"0000" AND y_behav = x"0000")
-        --     report "0 * 0 failed"
-        --     severity error;
-
-        -- a <= "0010"; 
-        -- b <= "0010";
-        -- wait for 10 ns;
-        -- assert (y_dataflow = x"0004" AND y_behav = x"0004")
-        --     report "2 * 2 = 4 failed"
-        --     severity error;
-
-        -- s <= '1';
-
-        -- a <= "1000";        -- -8
-        -- b <= "0111";        -- 7
-        -- wait for 10 ns;
-        -- assert (y_dataflow = b"1100_1000" AND y_behav = b"1100_1000")
-        --     report "-128 * 1 failed"
-        --     severity error;
-
-        -- a <= "0111";        -- 7
-        -- b <= "1000";        -- -8
-        -- wait for 10 ns;
-        -- assert (y_dataflow = b"1100_1000" AND y_behav = b"1100_1000")
-        --     report "1 * -128 failed"
-        --     severity error;
-
-        -- a <= "1000";        -- -8
-        -- b <= "1000";        -- -8
-        -- wait for 10 ns;
-        -- assert (y_dataflow = b"0100_0000" AND y_behav = b"0100_0000")
-        --     report "-128 * -128 failed"
-        --     severity error;
         
-        -- N = 8 tests
+        
         ---------------------------------------------------------------------------------------------------
-        -- edge cases
+        -- non vector edge cases
         ---------------------------------------------------------------------------------------------------
-
+        
+        v <= '0';
+        
         -- unsigned
-        a <= b"0000_0000"; 
+        s <= '0';
+        
         b <= b"0000_0000";
-        wait for 10 ns;
-        assert (y_dataflow = x"0000" AND y_behav = x"0000")
+        a <= b"0000_0000"; 
+        wait for 1 ns;
+        assert (y = x"0000" AND y_ref = x"0000")
             report "0 * 0  = 0 failed"
             severity error;
 
         a <= b"0000_0010"; 
         b <= b"0000_0010";
-        wait for 10 ns;
-        assert (y_dataflow = x"0004" AND y_behav = x"0004")
+        wait for 1 ns;
+        assert (y = x"0004" AND y_ref = x"0004")
             report "2 * 2 = 4 failed"
             severity error;
 
@@ -99,107 +93,110 @@ begin
 
         a <= "10000000";        -- -128
         b <= "00000001";        -- 1
-        wait for 10 ns;
-        assert (y_dataflow = b"1111_1111_1000_0000" AND y_behav = b"1111_1111_1000_0000")
+        wait for 1 ns;
+        assert (y = b"1111_1111_1000_0000" AND y_ref = b"1111_1111_1000_0000")
             report "-128 * 1 = -128 failed"
             severity error;
 
         a <= "00000001";        -- 1
         b <= "10000000";        -- -128
-        wait for 10 ns;
-        assert (y_dataflow = b"1111_1111_1000_0000" AND y_behav = b"1111_1111_1000_0000")
+        wait for 1 ns;
+        assert (y = b"1111_1111_1000_0000" AND y_ref = b"1111_1111_1000_0000")
             report "1 * -128 = -128 failed"
             severity error;
 
         a <= "10000000";        -- -128
         b <= "10000000";        -- -128
-        wait for 10 ns;
-        assert (y_dataflow = b"0100_0000_0000_0000" AND y_behav = b"0100_0000_0000_0000")
+        wait for 1 ns;
+        assert (y = b"0100_0000_0000_0000" AND y_ref = b"0100_0000_0000_0000")
             report "-128 * -128 = 16384 failed"
             severity error;
 
 
         ---------------------------------------------------------------------------------------------------
-        -- test all cases
+        -- vector edge cases
         ---------------------------------------------------------------------------------------------------
-
+        
+        v <= '1';
         s <= '0';
-        v <= '0';
-
+        
+        a <= b"1000_1000";        -- 8   8 
+        b <= b"1000_1000";        -- 8   8
+        wait for 1 ns;
+        assert (y = b"0100_0000_0100_0000" AND y_ref = b"0100_0000_0100_0000")
+        report "-8 :: -8  * -8 :: -8  = 64 :: 64 failed"
+        severity error;
+        
+        
+        s <= '1';
+        
         a <= b"1000_1000";        -- -8   -8 
         b <= b"1000_1000";        -- -8   -8
-        wait for 10 ns;
-        assert (y_dataflow = b"0100_0000_0100_0000" AND y_behav = b"0100_0000_0100_0000")
-            report "-8 :: -8  * -8 :: -8  = 64 :: 64 failed"
-            severity error;
+        wait for 1 ns;
+        assert (y = b"0100_0000_0100_0000" AND y_ref = b"0100_0000_0100_0000")
+        report "-8 :: -8  * -8 :: -8  = 64 :: 64 failed"
+        severity error;
 
-        if s = '0' and v = '0' then
-            for ai in 0 to 2**8-1 loop
-                a <= bit_vector( to_unsigned(ai, mul_width) );
-                for bi in 0 to 2**8-1 loop
-                    b <= bit_vector( to_unsigned(bi, mul_width) );
-                    wait for 1 ns;
-                    if y_dataflow /= y_behav then
-                        wrong_result := True;
-                        ErrorCount := ErrorCount + 1;
-                    else 
-                        wrong_result := false;
-                    end if;
-                    assert wrong_result = false report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
-                end loop;
+
+        ---------------------------------------------------------------------------------------------------
+        -- test all cases
+        -------------------------------------------------------------------------------------------------
+        
+        -- nonvectorized
+        v <= '0';   
+        s <= '0';
+
+        for ai in 0 to 2**8-1 loop
+            a <= bit_vector( to_unsigned(ai, mul_width) );
+            for bi in 0 to 2**8-1 loop
+                b <= bit_vector( to_unsigned(bi, mul_width) );
+                wait for 1 ns;
+                if y /= y_ref then ErrorCount_unv := ErrorCount_unv + 1; end if;
             end loop;
+        end loop;
+
+        s <= '1';
   
-        elsif s = '1' and v = '0' then
-            for ai in 0 to 2**8-1 loop
-                a <= bit_vector( to_signed(ai, mul_width) );
-                for bi in 0 to 2**8-1 loop
-                    b <= bit_vector( to_signed(bi, mul_width) );
-                    wait for 1 ns;
-                    if y_dataflow /= y_behav then
-                        wrong_result := True;
-                        ErrorCount := ErrorCount + 1;
-                    else 
-                        wrong_result := false;
-                    end if;
-                    assert wrong_result = false report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
-                end loop;
+        for ai in 0 to 2**8-1 loop
+            a <= bit_vector( to_signed(ai, mul_width) );
+            for bi in 0 to 2**8-1 loop
+                b <= bit_vector( to_signed(bi, mul_width) );
+                wait for 1 ns;
+                if y /= y_ref then ErrorCount_snv := ErrorCount_snv + 1; end if;
             end loop;
+        end loop;
 
-        elsif s = '0' and v = '1' then
-            for ai in 0 to 2**3-1 loop
-                a <= bit_vector( to_unsigned(ai, mul_width/2) ) & bit_vector( to_unsigned(ai, mul_width/2) );
-                for bi in 0 to 2**3-1 loop
-                    b <= bit_vector( to_unsigned(bi, mul_width/2) ) & bit_vector( to_unsigned(bi, mul_width/2) );
-                    wait for 1 ns;
-                    if y_dataflow /= y_behav then
-                        wrong_result := True;
-                        ErrorCount := ErrorCount + 1;
-                    else 
-                        wrong_result := false;
-                    end if;
-                    assert wrong_result = false report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
-                end loop;
-            end loop;
+        -- vectorized
+        v <= '1';
+        s <= '0';
 
-        elsif s = '1' and v = '1' then
-            for ai in 0 to 2**3-1 loop
-                a <= bit_vector( to_signed(ai, mul_width/2) ) & bit_vector( to_signed(ai, mul_width/2) );
-                for bi in 0 to 2**3-1 loop
-                    b <= bit_vector( to_signed(bi, mul_width/2) ) & bit_vector( to_signed(bi, mul_width/2) );
-                    wait for 1 ns;
-                    if y_dataflow /= y_behav then
-                        wrong_result := True;
-                        ErrorCount := ErrorCount + 1;
-                    else 
-                        wrong_result := false;
-                    end if;
-                    assert wrong_result = false report "Mismatch between dataflow and behavioral results" SEVERITY ERROR;
-                end loop;
+        for ai in 0 to 2**3-1 loop
+            a <= bit_vector( to_unsigned(ai, mul_width/2) ) & bit_vector( to_unsigned(ai, mul_width/2) );
+            for bi in 0 to 2**3-1 loop
+                b <= bit_vector( to_unsigned(bi, mul_width/2) ) & bit_vector( to_unsigned(bi, mul_width/2) );
+                wait for 1 ns;
+                if y /= y_ref then ErrorCount_uv := ErrorCount_uv + 1; end if;
             end loop;
-        end if;
+        end loop;
+
+        s <= '1';
+
+        for ai in 0 to 2**3-1 loop
+            a <= bit_vector( to_signed(ai, mul_width/2) ) & bit_vector( to_signed(ai, mul_width/2) );
+            for bi in 0 to 2**3-1 loop
+                b <= bit_vector( to_signed(bi, mul_width/2) ) & bit_vector( to_signed(bi, mul_width/2) );
+                wait for 1 ns;
+                if y /= y_ref then ErrorCount_sv := ErrorCount_sv + 1; end if;
+            end loop;
+        end loop;
 
         -- End of testbench
-        report "Test completed with " & integer'image(ErrorCount) & " errors";
+        report "Test unsigned   non vector  completed with " & integer'image(ErrorCount_unv) & " errors";
+        report "Test signed     non vector  completed with " & integer'image(ErrorCount_snv) & " errors";
+        report "Test unsigned   vector      completed with " & integer'image(ErrorCount_uv) & " errors";
+        report "Test signed     vector      completed with " & integer'image(ErrorCount_sv) & " errors";
         wait;
     end process;
-end Behavioral; 
+--- ENTER STUDENT CODE ABOVE ---
+
+end behavioral;

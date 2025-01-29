@@ -1,12 +1,15 @@
 v 4
-file . "tb_multiplier.vhd" "74272ae7cf1c495ce2f1af0cbcbb5c3cfff39fa9" "20250128093216.325":
-  entity tb_multiplier at 1( 0) + 0 on 175;
-  architecture behavioral of tb_multiplier at 8( 115) + 0 on 176;
-file . "multiplier.vhd" "2f45f30b0dbc9fab3b38a4a4b10808ae9ecf6358" "20250128093216.310":
-  entity multiplier at 21( 543) + 0 on 171;
-  architecture dataflow_new of multiplier at 36( 853) + 0 on 172;
-  architecture dataflow of multiplier at 127( 3462) + 0 on 173;
-  architecture behavioral of multiplier at 213( 6228) + 0 on 174;
+file . "tb_multiplier.vhd" "ab4292fdbf97c429175a4967ca145ba4c0968bae" "20250129112044.378":
+  entity tb_multiplier at 22( 459) + 0 on 184;
+  architecture behavioral of tb_multiplier at 38( 851) + 0 on 185;
+file . "multiplier.vhd" "90f975ef23a47d8792ba13526b4b0269d11e22c4" "20250129112044.354":
+  entity adder_def at 21( 500) + 0 on 177;
+  architecture dataflow of adder_def at 42( 1020) + 0 on 178;
+  entity multiplier_def at 71( 1790) + 0 on 179;
+  architecture dataflow of multiplier_def at 81( 2037) + 0 on 180;
+  entity multiplier at 163( 4551) + 0 on 181;
+  architecture dataflow of multiplier at 175( 4841) + 0 on 182;
+  architecture behavioral of multiplier at 241( 6370) + 0 on 183;
 file . "adder.vhd" "ef83deb9864d5a8ab4994b878c8ea72f8e34ddcb" "20250128093216.274":
   entity adder at 22( 463) + 0 on 169;
   architecture dataflow of adder at 35( 725) + 0 on 170;
